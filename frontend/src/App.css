@@ -1,0 +1,354 @@
+/* --- Global & Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Zeyada&display=swap');
+
+:root {
+  --primary-bg: #0c0a18; /* Near Black */
+  --secondary-bg: rgba(31, 41, 55, 0.5); /* Semi-transparent darker gray */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(139, 92, 246, 0.3); /* Light Violet */
+  --primary-accent: #8B5CF6; /* Violet */
+  --primary-text: #E5E7EB; /* Light Gray */
+  --secondary-text: #9CA3AF; /* Medium Gray */
+  --correct-color: #34D399; /* Emerald Green */
+  --incorrect-color: #F87171; /* Red */
+  --font-title: 'Poppins', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--primary-bg); /* Fallback */
+  color: var(--primary-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden; /* This is the cause of the problem, but needed for the background */
+}
+
+.App-container {
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+}
+
+/* --- Common Elements --- */
+.back-button {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  padding: 8px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem; /* Reduced margin */
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+.back-button:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.mode-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  color: var(--primary-text);
+  font-size: 2.2rem; /* Made slightly smaller */
+  text-align: center;
+  margin-bottom: 0.2rem; /* Reduced margin */
+}
+
+.mode-description {
+  text-align: center;
+  color: var(--secondary-text);
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto; /* Reduced margin */
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.game-board {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(10px);
+}
+
+.loader {
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--primary-accent);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 4rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  text-align: center;
+  color: var(--incorrect-color);
+  background-color: rgba(248, 113, 113, 0.1);
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  margin-top: 1.5rem;
+}
+
+/* --- Home Screen --- */
+.home-screen {
+  text-align: center;
+}
+.main-title {
+  font-family: 'Zeyada', cursive;
+  font-size: 6rem;
+  color: var(--primary-text);
+  margin-bottom: -1rem;
+}
+.subtitle {
+  color: var(--secondary-text);
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+.mode-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.mode-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(10px);
+}
+.mode-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+}
+.mode-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-accent);
+  font-weight: 600;
+}
+.mode-card p {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* --- Adventure & Adaptive Modes --- */
+.description, .question-text {
+  font-size: 1.25rem;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: var(--primary-text);
+}
+
+.answer-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.answer-form input[type="text"] {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  color: var(--primary-text);
+  width: 80%;
+  text-align: center;
+}
+.answer-form input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+.answer-form button {
+  background-image: linear-gradient(to right, #8B5CF6, #6D28D9);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.answer-form button:hover {
+  transform: scale(1.05);
+}
+
+.feedback {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+.end-message {
+  text-align: center;
+}
+
+/* --- Generator Mode --- */
+.upload-section {
+  text-align: center;
+  margin-bottom: 1rem; /* Reduced margin */
+}
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  border: 2px dashed var(--border-color);
+  display: inline-block;
+  padding: 1.5rem 2.5rem; /* Made slightly smaller */
+  cursor: pointer;
+  background-color: var(--glass-bg);
+  color: var(--secondary-text);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.custom-file-upload:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+.custom-file-upload.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* --- SCROLLING FIX IS HERE --- */
+.questions-container {
+  margin-top: 1rem; /* Reduced margin */
+  max-height: 48vh; /* Made shorter to show button */
+  overflow-y: auto;  /* Add a vertical scrollbar ONLY when content overflows */
+  padding-right: 15px; /* Add space for the scrollbar so it doesn't overlap text */
+}
+
+.question-card {
+  background-color: var(--glass-bg);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  border-left: 5px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+.question-card.correct {
+  border-left-color: var(--correct-color);
+}
+.question-card.incorrect {
+  border-left-color: var(--incorrect-color);
+}
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.question-header h3 {
+  margin: 0;
+  color: var(--primary-text);
+  font-weight: 600;
+}
+.hint-button {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+}
+.hint-button:hover {
+  background-color: var(--secondary-bg);
+  border-color: var(--primary-accent);
+}
+.hint-box {
+  background-color: rgba(139, 92, 246, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  border-left: 3px solid var(--primary-accent);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.option {
+  display: flex;
+  align-items: center;
+  background-color: var(--secondary-bg);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+}
+.option:hover {
+  border-color: var(--primary-accent);
+}
+.option input[type="radio"] {
+  margin-right: 10px;
+  accent-color: var(--primary-accent);
+}
+.check-button, .undo-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.check-button {
+  background-image: linear-gradient(to right, #34D399, #10B981);
+  color: white;
+  margin-top: 1.5rem;
+}
+.undo-button {
+  background-color: var(--secondary-text);
+  color: var(--primary-bg);
+  margin-bottom: 1.5rem;
+}
+.undo-button:disabled {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+}
+.undo-button:hover:not(:disabled), .check-button:hover {
+    transform: scale(1.02);
+}
+
